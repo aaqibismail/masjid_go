@@ -1,4 +1,0 @@
-enum AsrJurisdiction {
-  hanafi,
-  standard,
-}

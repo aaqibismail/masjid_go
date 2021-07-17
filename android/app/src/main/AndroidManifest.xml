@@ -1,9 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.masjid_enroute">
+    package="com.halalhacks.masjid_go">
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-      android:label="masjid_enroute"
+      android:label="Masjid Go"
       android:icon="@mipmap/ic_launcher"
       android:allowBackup="true">
         <activity
@@ -30,6 +30,6 @@
             android:name="flutterEmbedding"
             android:value="2" />
         <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="@string/GOOGLE_MAPS_ANDROID"/>
+               android:value="${GOOGLE_MAPS_ANDROID}"/>
     </application>
 </manifest>
