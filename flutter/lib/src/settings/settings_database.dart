@@ -30,7 +30,7 @@ class SettingsDatabase {
       futures.add(searchBox.getAt(i - 1));
     }
     final list = await Future.wait(futures);
-    return list.where((element) => element != null).cast<String>().toList();
+    return list.whereType<String>().toList();
   }
 
   Future<void> newSettings(GlobalSettings settings) {

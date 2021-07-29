@@ -7,6 +7,7 @@ import 'package:masjid_go/src/models/lat_long/lat_long.dart';
 
 extension PointLatLngX on PointLatLng {
   LatLng toLatLng() => LatLng(latitude, longitude);
+  String toLatLngString() => '$latitude,$longitude';
 }
 
 extension BoundX on Bounds {

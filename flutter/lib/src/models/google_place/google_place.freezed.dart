@@ -12,12 +12,16 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
+GooglePlace _$GooglePlaceFromJson(Map<String, dynamic> json) {
+  return _GooglePlace.fromJson(json);
+}
+
 /// @nodoc
 class _$GooglePlaceTearOff {
   const _$GooglePlaceTearOff();
 
   _GooglePlace call(
-      {required String fullText,
+      {@_Converter() required String fullText,
       required String primaryText,
       required String secondaryText,
       required String placeId,
@@ -30,6 +34,10 @@ class _$GooglePlaceTearOff {
       distance: distance,
     );
   }
+
+  GooglePlace fromJson(Map<String, Object> json) {
+    return GooglePlace.fromJson(json);
+  }
 }
 
 /// @nodoc
@@ -37,12 +45,14 @@ const $GooglePlace = _$GooglePlaceTearOff();
 
 /// @nodoc
 mixin _$GooglePlace {
+  @_Converter()
   String get fullText => throw _privateConstructorUsedError;
   String get primaryText => throw _privateConstructorUsedError;
   String get secondaryText => throw _privateConstructorUsedError;
   String get placeId => throw _privateConstructorUsedError;
   int? get distance => throw _privateConstructorUsedError;
 
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $GooglePlaceCopyWith<GooglePlace> get copyWith =>
       throw _privateConstructorUsedError;
@@ -54,7 +64,7 @@ abstract class $GooglePlaceCopyWith<$Res> {
           GooglePlace value, $Res Function(GooglePlace) then) =
       _$GooglePlaceCopyWithImpl<$Res>;
   $Res call(
-      {String fullText,
+      {@_Converter() String fullText,
       String primaryText,
       String secondaryText,
       String placeId,
@@ -110,7 +120,7 @@ abstract class _$GooglePlaceCopyWith<$Res>
       __$GooglePlaceCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String fullText,
+      {@_Converter() String fullText,
       String primaryText,
       String secondaryText,
       String placeId,
@@ -161,16 +171,20 @@ class __$GooglePlaceCopyWithImpl<$Res> extends _$GooglePlaceCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$_GooglePlace with DiagnosticableTreeMixin implements _GooglePlace {
   const _$_GooglePlace(
-      {required this.fullText,
+      {@_Converter() required this.fullText,
       required this.primaryText,
       required this.secondaryText,
       required this.placeId,
       this.distance});
 
+  factory _$_GooglePlace.fromJson(Map<String, dynamic> json) =>
+      _$_$_GooglePlaceFromJson(json);
+
   @override
+  @_Converter()
   final String fullText;
   @override
   final String primaryText;
@@ -232,17 +246,26 @@ class _$_GooglePlace with DiagnosticableTreeMixin implements _GooglePlace {
   @override
   _$GooglePlaceCopyWith<_GooglePlace> get copyWith =>
       __$GooglePlaceCopyWithImpl<_GooglePlace>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$_$_GooglePlaceToJson(this);
+  }
 }
 
 abstract class _GooglePlace implements GooglePlace {
   const factory _GooglePlace(
-      {required String fullText,
+      {@_Converter() required String fullText,
       required String primaryText,
       required String secondaryText,
       required String placeId,
       int? distance}) = _$_GooglePlace;
 
+  factory _GooglePlace.fromJson(Map<String, dynamic> json) =
+      _$_GooglePlace.fromJson;
+
   @override
+  @_Converter()
   String get fullText => throw _privateConstructorUsedError;
   @override
   String get primaryText => throw _privateConstructorUsedError;

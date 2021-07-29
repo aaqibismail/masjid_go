@@ -41,7 +41,7 @@ class HomeNotifier extends StateNotifier<AsyncValue<HomeState>> {
 
   Future<String?> _locToString(LatLong? loc) async {
     if (loc != null) {
-      return mapRepository.addressFromLoc(loc);
+      return mapRepository.getAddressFromLoc(loc);
     }
   }
 

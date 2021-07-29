@@ -1,37 +1,24 @@
 import 'dart:convert' show json;
 
+import 'package:flutter/widgets.dart' show debugPrint;
+import 'package:flutter_google_places_sdk/flutter_google_places_sdk.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:http/http.dart' as http;
+import 'package:masjid_go/src/models/google_place/google_place.dart';
 import 'package:masjid_go/src/models/lat_long/lat_long.dart';
 import 'package:masjid_go/src/models/masjid/masjid.dart';
+import 'package:masjid_go/src/object_extensions.dart';
 
 class MapRepositoryCommon {
+  final FlutterGooglePlacesSdk places;
   final PolylinePoints polylinePoints;
-  MapRepositoryCommon(this.polylinePoints);
+  final String url;
 
-  Future<List<Masjid>> getMasjids(Route route) async {
-    return const [];
-  }
-
-  Future<PolylineResult?> findRoutes(String origin, String destination) async {
-    const url = "us-central1-masjidenroute.cloudfunctions.net";
-    const endpoint = "/directions/";
-    final params = {
-      'origin': origin,
-      'destination': destination,
-    };
-    final uri = Uri.https(url, endpoint, params);
-
-    try {
-      final response = await http.get(uri);
-      if (response.statusCode == 200) {
-        final parsedJson = json.decode(response.body);
-        return polylinePoints.parseJson(parsedJson);
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
+  MapRepositoryCommon(
+    this.places,
+    this.polylinePoints,
+    this.url,
+  );
 
   Uri buildMapsURL(
     LatLong origin,
@@ -67,6 +54,60 @@ class MapRepositoryCommon {
       });
     }
 
-    return Uri.https("https://www.google.com", "/maps/dir/", params);
+    return Uri.https("www.google.com", "/maps/dir/", params);
+  }
+
+  Future<PolylineResult?> findRoutes(
+    String destination, {
+    LatLong? origin,
+    String? originPlaceId,
+  }) async {
+    assert(origin != null || originPlaceId != null);
+    try {
+      final params = {
+        'origin':
+            origin != null ? origin.toString() : 'place_id:$originPlaceId',
+        'destination': 'place_id:$destination',
+      };
+
+      final uri = Uri.parse(url).replace(queryParameters: params);
+
+      final response = await http.get(uri);
+      if (response.statusCode == 200) {
+        final parsedJson = json.decode(response.body);
+        return polylinePoints.parseJson(parsedJson);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<LatLong?> getLocFromPlaceId(String placeId) async {
+    final place = await places.fetchPlace(
+      placeId,
+      fields: [PlaceField.Location],
+    );
+    return place.place?.latLng?.toLatLong();
+  }
+
+  Future<List<Masjid>> getMasjids(Route route) async {
+    final uri = Uri.parse(url);
+    final locs = route.points.map((e) => e.toLatLngString()).toList();
+    final response = await http.post(uri, body: {"locs": locs});
+    if (response.statusCode == 200) {
+      final parsedJson = json.decode(response.body);
+    }
+    return const [];
+  }
+
+  Future<List<GooglePlace>> searchPlaces(String query, {LatLong? loc}) async {
+    final result = await places.findAutocompletePredictions(
+      query,
+      origin: loc?.toPlacesLatLng(),
+    );
+
+    return result.predictions
+        .map((place) => place.toGooglePlace())
+        .toList(growable: false);
   }
 }

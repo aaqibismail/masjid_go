@@ -1,0 +1,5 @@
+ignore:
+  - cupertino_icons
+  - flutter_web_plugins
+  - geolocator_web
+  - location_web

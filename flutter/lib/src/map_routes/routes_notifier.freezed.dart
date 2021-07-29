@@ -18,15 +18,11 @@ class _$RoutesStateTearOff {
 
   _RoutesState call(
       {required Set<Polyline> currPolyline,
-      required LatLng origin,
-      required Set<Marker> markers,
       int page = 0,
       required List<Polyline> polylines,
       required PolylineResult polylineResult}) {
     return _RoutesState(
       currPolyline: currPolyline,
-      origin: origin,
-      markers: markers,
       page: page,
       polylines: polylines,
       polylineResult: polylineResult,
@@ -40,8 +36,6 @@ const $RoutesState = _$RoutesStateTearOff();
 /// @nodoc
 mixin _$RoutesState {
   Set<Polyline> get currPolyline => throw _privateConstructorUsedError;
-  LatLng get origin => throw _privateConstructorUsedError;
-  Set<Marker> get markers => throw _privateConstructorUsedError;
   int get page => throw _privateConstructorUsedError;
   List<Polyline> get polylines => throw _privateConstructorUsedError;
   PolylineResult get polylineResult => throw _privateConstructorUsedError;
@@ -58,8 +52,6 @@ abstract class $RoutesStateCopyWith<$Res> {
       _$RoutesStateCopyWithImpl<$Res>;
   $Res call(
       {Set<Polyline> currPolyline,
-      LatLng origin,
-      Set<Marker> markers,
       int page,
       List<Polyline> polylines,
       PolylineResult polylineResult});
@@ -76,8 +68,6 @@ class _$RoutesStateCopyWithImpl<$Res> implements $RoutesStateCopyWith<$Res> {
   @override
   $Res call({
     Object? currPolyline = freezed,
-    Object? origin = freezed,
-    Object? markers = freezed,
     Object? page = freezed,
     Object? polylines = freezed,
     Object? polylineResult = freezed,
@@ -87,14 +77,6 @@ class _$RoutesStateCopyWithImpl<$Res> implements $RoutesStateCopyWith<$Res> {
           ? _value.currPolyline
           : currPolyline // ignore: cast_nullable_to_non_nullable
               as Set<Polyline>,
-      origin: origin == freezed
-          ? _value.origin
-          : origin // ignore: cast_nullable_to_non_nullable
-              as LatLng,
-      markers: markers == freezed
-          ? _value.markers
-          : markers // ignore: cast_nullable_to_non_nullable
-              as Set<Marker>,
       page: page == freezed
           ? _value.page
           : page // ignore: cast_nullable_to_non_nullable
@@ -120,8 +102,6 @@ abstract class _$RoutesStateCopyWith<$Res>
   @override
   $Res call(
       {Set<Polyline> currPolyline,
-      LatLng origin,
-      Set<Marker> markers,
       int page,
       List<Polyline> polylines,
       PolylineResult polylineResult});
@@ -140,8 +120,6 @@ class __$RoutesStateCopyWithImpl<$Res> extends _$RoutesStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? currPolyline = freezed,
-    Object? origin = freezed,
-    Object? markers = freezed,
     Object? page = freezed,
     Object? polylines = freezed,
     Object? polylineResult = freezed,
@@ -151,14 +129,6 @@ class __$RoutesStateCopyWithImpl<$Res> extends _$RoutesStateCopyWithImpl<$Res>
           ? _value.currPolyline
           : currPolyline // ignore: cast_nullable_to_non_nullable
               as Set<Polyline>,
-      origin: origin == freezed
-          ? _value.origin
-          : origin // ignore: cast_nullable_to_non_nullable
-              as LatLng,
-      markers: markers == freezed
-          ? _value.markers
-          : markers // ignore: cast_nullable_to_non_nullable
-              as Set<Marker>,
       page: page == freezed
           ? _value.page
           : page // ignore: cast_nullable_to_non_nullable
@@ -180,18 +150,12 @@ class __$RoutesStateCopyWithImpl<$Res> extends _$RoutesStateCopyWithImpl<$Res>
 class _$_RoutesState with DiagnosticableTreeMixin implements _RoutesState {
   const _$_RoutesState(
       {required this.currPolyline,
-      required this.origin,
-      required this.markers,
       this.page = 0,
       required this.polylines,
       required this.polylineResult});
 
   @override
   final Set<Polyline> currPolyline;
-  @override
-  final LatLng origin;
-  @override
-  final Set<Marker> markers;
   @JsonKey(defaultValue: 0)
   @override
   final int page;
@@ -202,7 +166,7 @@ class _$_RoutesState with DiagnosticableTreeMixin implements _RoutesState {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'RoutesState(currPolyline: $currPolyline, origin: $origin, markers: $markers, page: $page, polylines: $polylines, polylineResult: $polylineResult)';
+    return 'RoutesState(currPolyline: $currPolyline, page: $page, polylines: $polylines, polylineResult: $polylineResult)';
   }
 
   @override
@@ -211,8 +175,6 @@ class _$_RoutesState with DiagnosticableTreeMixin implements _RoutesState {
     properties
       ..add(DiagnosticsProperty('type', 'RoutesState'))
       ..add(DiagnosticsProperty('currPolyline', currPolyline))
-      ..add(DiagnosticsProperty('origin', origin))
-      ..add(DiagnosticsProperty('markers', markers))
       ..add(DiagnosticsProperty('page', page))
       ..add(DiagnosticsProperty('polylines', polylines))
       ..add(DiagnosticsProperty('polylineResult', polylineResult));
@@ -225,11 +187,6 @@ class _$_RoutesState with DiagnosticableTreeMixin implements _RoutesState {
             (identical(other.currPolyline, currPolyline) ||
                 const DeepCollectionEquality()
                     .equals(other.currPolyline, currPolyline)) &&
-            (identical(other.origin, origin) ||
-                const DeepCollectionEquality().equals(other.origin, origin)) &&
-            (identical(other.markers, markers) ||
-                const DeepCollectionEquality()
-                    .equals(other.markers, markers)) &&
             (identical(other.page, page) ||
                 const DeepCollectionEquality().equals(other.page, page)) &&
             (identical(other.polylines, polylines) ||
@@ -244,8 +201,6 @@ class _$_RoutesState with DiagnosticableTreeMixin implements _RoutesState {
   int get hashCode =>
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(currPolyline) ^
-      const DeepCollectionEquality().hash(origin) ^
-      const DeepCollectionEquality().hash(markers) ^
       const DeepCollectionEquality().hash(page) ^
       const DeepCollectionEquality().hash(polylines) ^
       const DeepCollectionEquality().hash(polylineResult);
@@ -259,18 +214,12 @@ class _$_RoutesState with DiagnosticableTreeMixin implements _RoutesState {
 abstract class _RoutesState implements RoutesState {
   const factory _RoutesState(
       {required Set<Polyline> currPolyline,
-      required LatLng origin,
-      required Set<Marker> markers,
       int page,
       required List<Polyline> polylines,
       required PolylineResult polylineResult}) = _$_RoutesState;
 
   @override
   Set<Polyline> get currPolyline => throw _privateConstructorUsedError;
-  @override
-  LatLng get origin => throw _privateConstructorUsedError;
-  @override
-  Set<Marker> get markers => throw _privateConstructorUsedError;
   @override
   int get page => throw _privateConstructorUsedError;
   @override

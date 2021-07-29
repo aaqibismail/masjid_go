@@ -7,38 +7,65 @@ import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:masjid_go/src/map_routes/routes_notifier.dart';
+import 'package:masjid_go/src/models/lat_long/lat_long.dart';
 import 'package:masjid_go/src/object_extensions.dart';
 import 'package:masjid_go/src/providers.dart';
 import 'package:masjid_go/src/router.gr.dart';
 
 class MapRoutes extends StatelessWidget {
   final String? origin;
+  final String? originPlaceId;
   final String? destination;
+  final String? destinationPlaceId;
 
   const MapRoutes({
     Key? key,
     @PathParam('origin') this.origin,
+    @PathParam('originPlaceId') this.originPlaceId,
     @PathParam('destination') this.destination,
+    @PathParam('destinationPlaceId') this.destinationPlaceId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final isValid = origin != null && destination != null;
+    final originLatLong = LatLong.fromString(origin);
+    final destinationLatLong = LatLong.fromString(destination);
+
+    final isValid = (originLatLong != null || originPlaceId != null) &&
+        destinationLatLong != null &&
+        destinationPlaceId != null;
 
     return isValid
-        ? _MapRoutes(origin: origin!, destination: destination!)
-        : const Scaffold(body: Center(child: Text("Invalid Parameters")));
+        ? _MapRoutes(
+            origin: originLatLong!,
+            originPlaceId: originPlaceId,
+            destination: destinationLatLong!,
+            destinationPlaceId: destinationPlaceId!,
+          )
+        : Scaffold(
+            appBar: AppBar(title: const Text('Error'), centerTitle: true),
+            body: Center(
+              child: Text(
+                "Invalid Location",
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
+            ),
+          );
   }
 }
 
 class _MapRoutes extends ConsumerStatefulWidget {
-  final String origin;
-  final String destination;
+  final LatLong origin;
+  final String? originPlaceId;
+  final LatLong destination;
+  final String destinationPlaceId;
 
   const _MapRoutes({
     Key? key,
     required this.origin,
+    required this.originPlaceId,
     required this.destination,
+    required this.destinationPlaceId,
   }) : super(key: key);
 
   @override
@@ -47,14 +74,33 @@ class _MapRoutes extends ConsumerStatefulWidget {
 
 class _MapRoutesState extends ConsumerState<_MapRoutes> {
   late final GoogleMapController mapController;
+  late final Set<Marker> markers;
+  late final CameraPosition initialCameraPosition;
   final pageController = PageController(viewportFraction: 0.9);
+
   bool trafficEnabled = true;
 
   @override
   void initState() {
-    ref
-        .read(routesNotifierProvider.notifier)
-        .findRoute(widget.origin, widget.destination);
+    ref.read(routesNotifierProvider.notifier).findRoute(
+          widget.destinationPlaceId,
+          origin: widget.origin,
+          originPlaceId: widget.originPlaceId,
+        );
+
+    initialCameraPosition = CameraPosition(target: widget.origin.toLatLng());
+
+    markers = {
+      Marker(
+        markerId: const MarkerId("destination"),
+        position: widget.destination.toLatLng(),
+        infoWindow: const InfoWindow(
+          title: 'Destination',
+          // snippet: _destinationAddress,
+        ),
+        // icon: BitmapDescriptor.defaultMarker,
+      ),
+    };
     super.initState();
   }
 
@@ -67,20 +113,6 @@ class _MapRoutesState extends ConsumerState<_MapRoutes> {
 
   @override
   Widget build(BuildContext context) {
-    final originLoc = ref.watch(routesNotifierProvider.select(
-      (state) => state.maybeWhen(
-        data: (value) => value.origin,
-        orElse: () => null,
-      ),
-    ));
-
-    final markers = ref.watch(routesNotifierProvider.select(
-      (state) => state.maybeWhen(
-        data: (value) => value.markers,
-        orElse: () => <Marker>{},
-      ),
-    ));
-
     final polyline = ref.watch(routesNotifierProvider.select(
       (state) => state.maybeWhen(
         data: (value) => value.currPolyline,
@@ -129,9 +161,7 @@ class _MapRoutesState extends ConsumerState<_MapRoutes> {
             onMapCreated: (controller) => mapController = controller,
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
-            initialCameraPosition: const CameraPosition(
-              target: LatLng(-37, 122),
-            ),
+            initialCameraPosition: initialCameraPosition,
           ),
           Align(
             alignment: const Alignment(0, 0.85),
@@ -142,13 +172,9 @@ class _MapRoutesState extends ConsumerState<_MapRoutes> {
                   alignment: const Alignment(0.9, 0),
                   child: _LocationButton(
                     onTap: () {
-                      if (originLoc != null) {
-                        mapController.animateCamera(
-                          CameraUpdate.newCameraPosition(
-                            CameraPosition(target: originLoc),
-                          ),
-                        );
-                      }
+                      mapController.animateCamera(
+                        CameraUpdate.newCameraPosition(initialCameraPosition),
+                      );
                     },
                   ),
                 ),

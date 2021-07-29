@@ -5,7 +5,7 @@ import 'package:masjid_go/src/models/lat_long/lat_long.dart';
 
 class LocationSearchNotifer extends StateNotifier<List<GooglePlace>> {
   final MapRepository mapRepository;
-  LocationSearchNotifer({required this.mapRepository}) : super(const []);
+  LocationSearchNotifer(this.mapRepository) : super(const []);
 
   Future<void> search(String query, {LatLong? loc}) async {
     if (query.isEmpty) return;

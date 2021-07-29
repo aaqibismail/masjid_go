@@ -1,0 +1,78 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "ANDROID_DEV",
+            "program": "lib/main.dart",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--dart-define", "GOOGLE_MAPS_KEY=GOOGLE_MAPS_ANDROID_DEV",
+                "--dart-define", "BACKEND_URL=BACKEND_DEV",
+            ]
+        },
+        {
+            "name": "ANDROID_PROFILE",
+            "program": "lib/main.dart",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile",
+            "args": [
+                "--dart-define", "GOOGLE_MAPS_KEY=GOOGLE_MAPS_ANDROID_DEV",
+                "--dart-define", "BACKEND_URL=BACKEND_DEV",
+            ]
+        },
+        {
+            "name": "ANDROID_PROD",
+            "program": "lib/main.dart",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "args": [
+                "--dart-define", "GOOGLE_MAPS_KEY=GOOGLE_MAPS_ANDROID_PROD",
+                "--dart-define", "BACKEND_URL=BACKEND_PROD",
+            ]
+        },
+        {
+            "name": "WEB_DEV",
+            "program": "lib/main.dart",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--dart-define", "GOOGLE_MAPS_KEY=GOOGLE_MAPS_WEB_DEV",
+                "--dart-define", "BACKEND_URL=BACKEND_DEV",
+            ]
+        },
+        {
+            "name": "WEB_PROFILE",
+            "program": "lib/main.dart",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile",
+            "args": [
+                "--dart-define", "GOOGLE_MAPS_KEY=GOOGLE_MAPS_WEB_DEV",
+                "--dart-define", "BACKEND_URL=BACKEND_DEV",
+            ]
+        },
+        {
+            "name": "WEB_PROD",
+            "program": "lib/main.dart",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "args": [
+                "--dart-define", "GOOGLE_MAPS_KEY=GOOGLE_MAPS_WEB_PROD",
+                "--dart-define", "BACKEND_URL=BACKEND_PROD",
+            ]
+        },
+        {
+            "name": "Unit Test",
+            "program": "test/",
+            "request": "launch",
+            "type": "dart",
+        }
+    ]
+}

@@ -23,19 +23,20 @@ class RoutesNotifier extends StateNotifier<AsyncValue<RoutesState>> {
     });
   }
 
-  Future<void> findRoute(String origin, String destination) async {
-    final result = await Future.wait([
-      mapRepository.findRoutes(origin, destination),
-      mapRepository.getLocFromPlaceId(origin),
-      mapRepository.getLocFromPlaceId(destination),
-    ]);
+  Future<void> findRoute(
+    String destination, {
+    LatLong? origin,
+    String? originPlaceId,
+  }) async {
+    assert(origin != null || originPlaceId != null);
 
-    final polylineResult = result[0] as PolylineResult?;
-    final originLoc = result[1] as LatLong?;
-    final destinationLoc = result[2] as LatLong?;
+    final polylineResult = await mapRepository.findRoutes(
+      destination,
+      origin: origin,
+      originPlaceId: originPlaceId,
+    );
 
-    if (result.any((_) => _ == null) ||
-        polylineResult!.errorMessage.isNotEmpty) {
+    if (polylineResult == null || polylineResult.errorMessage.isNotEmpty) {
       state = AsyncError("Error Loading");
     } else {
       final converted = polylineResult.routes.map((route) {
@@ -54,20 +55,9 @@ class RoutesNotifier extends StateNotifier<AsyncValue<RoutesState>> {
           zIndex: 10,
         ));
       }
+
       state = AsyncData(RoutesState(
         currPolyline: {polylines[0]},
-        markers: {
-          Marker(
-            markerId: const MarkerId("destination"),
-            position: destinationLoc!.toLatLng(),
-            infoWindow: const InfoWindow(
-              title: 'Destination',
-              // snippet: _destinationAddress,
-            ),
-            // icon: BitmapDescriptor.defaultMarker,
-          ),
-        },
-        origin: originLoc!.toLatLng(),
         polylines: polylines,
         polylineResult: polylineResult,
       ));

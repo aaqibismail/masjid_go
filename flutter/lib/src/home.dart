@@ -8,6 +8,7 @@ import 'package:masjid_go/gen/assets.gen.dart';
 import 'package:masjid_go/src/home/home_notifier.dart';
 import 'package:masjid_go/src/location_search.dart';
 import 'package:masjid_go/src/models/google_place/google_place.dart';
+import 'package:masjid_go/src/models/lat_long/lat_long.dart';
 import 'package:masjid_go/src/providers.dart';
 import 'package:masjid_go/src/router.gr.dart';
 import 'package:quick_actions/quick_actions.dart';
@@ -20,7 +21,7 @@ class Home extends ConsumerStatefulWidget {
 }
 
 class _HomeState extends ConsumerState<Home> {
-  static const quickActions = QuickActions();
+  final quickActions = const QuickActions();
 
   @override
   void initState() {
@@ -89,25 +90,9 @@ class _HomeState extends ConsumerState<Home> {
                 maintainState: true,
                 child: ElevatedButton(
                   onPressed: () {
-                    ref.read(homeNotifierProvider).whenData((value) async {
-                      if (value.startPlaceId != null &&
-                          value.destinationPlaceId != null) {
-                        AutoRouter.of(context).push(MapRoutes(
-                          origin: value.startPlaceId,
-                          destination: value.destinationPlaceId,
-                        ));
-                      } else if (value.currentLoc != null &&
-                          value.destinationPlaceId != null) {
-                        final loc = await ref
-                            .read(mapRepoProvider)
-                            .getPlaceIdFromLoc(value.currentLoc!);
-
-                        AutoRouter.of(context).push(MapRoutes(
-                          origin: loc,
-                          destination: value.destinationPlaceId,
-                        ));
-                      }
-                    });
+                    ref
+                        .read(homeNotifierProvider)
+                        .whenData((state) => showOverlay(state));
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
@@ -131,6 +116,70 @@ class _HomeState extends ConsumerState<Home> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> showOverlay(HomeState state) async {
+    final result = await showGeneralDialog(
+      context: context,
+      barrierColor: Colors.black12.withOpacity(0.6), // Background color
+      barrierDismissible: false,
+      barrierLabel: 'Dialog',
+      transitionDuration: const Duration(milliseconds: 400),
+      pageBuilder: (_, __, ___) => _Overlay(state: state),
+    ) as AsyncValue<Map<String, LatLong?>>?;
+
+    if (result == null ||
+        result is AsyncError ||
+        result.data?.value["origin"] == null ||
+        result.data?.value["destination"] == null) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Error"),
+            content: const Text('Could not load map data. Try again later.'),
+            actions: [
+              TextButton(
+                onPressed: () => AutoRouter.of(context).pop(),
+                child: const Text('Ok'),
+              )
+            ],
+          );
+        },
+      );
+    } else {
+      final origin = state.startPlaceId != null
+          ? result.data!.value["origin"]!
+          : state.currentLoc!;
+
+      final destination = result.data!.value["destination"]!;
+
+      AutoRouter.of(context).push(MapRoutes(
+        origin: origin.toString(),
+        originPlaceId: state.startPlaceId,
+        destination: destination.toString(),
+        destinationPlaceId: state.destinationPlaceId,
+      ));
+    }
+  }
+}
+
+class _Overlay extends HookConsumerWidget {
+  final HomeState state;
+  const _Overlay({Key? key, required this.state}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<AsyncValue<Map<String, LatLong?>>>(homeSubmitProvider(state),
+        (value) {
+      if (value is! AsyncLoading) AutoRouter.of(context).pop(value);
+    });
+
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      child: const Center(child: CircularProgressIndicator()),
     );
   }
 }

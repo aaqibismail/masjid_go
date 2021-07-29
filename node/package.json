@@ -4,18 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npx functions-framework --target=main [--signature-type=http]"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.1.16",
     "axios": "^0.21.1",
-    "dotenv": "^10.0.0",
-    "express": "^4.17.1"
+    "dotenv": "^10.0.0"
   },
   "engines": {
     "node": "14.x"
+  },
+  "devDependencies": {
+    "@google-cloud/functions-framework": "^1.9.0"
   }
 }

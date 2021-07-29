@@ -110,9 +110,10 @@ class __$LatLongCopyWithImpl<$Res> extends _$LatLongCopyWithImpl<$Res>
 /// @nodoc
 
 @HiveType(typeId: 0, adapterName: 'LatLongAdapter')
-class _$_LatLong with DiagnosticableTreeMixin implements _LatLong {
+class _$_LatLong extends _LatLong {
   const _$_LatLong(
-      {@HiveField(0) required this.lat, @HiveField(1) required this.lng});
+      {@HiveField(0) required this.lat, @HiveField(1) required this.lng})
+      : super._();
 
   @override
   @HiveField(0)
@@ -120,15 +121,6 @@ class _$_LatLong with DiagnosticableTreeMixin implements _LatLong {
   @override
   @HiveField(1)
   final double lng;
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'LatLong'))
-      ..add(DiagnosticsProperty('lat', lat))
-      ..add(DiagnosticsProperty('lng', lng));
-  }
 
   @override
   bool operator ==(dynamic other) {
@@ -152,10 +144,11 @@ class _$_LatLong with DiagnosticableTreeMixin implements _LatLong {
       __$LatLongCopyWithImpl<_LatLong>(this, _$identity);
 }
 
-abstract class _LatLong implements LatLong {
+abstract class _LatLong extends LatLong {
   const factory _LatLong(
       {@HiveField(0) required double lat,
       @HiveField(1) required double lng}) = _$_LatLong;
+  const _LatLong._() : super._();
 
   @override
   @HiveField(0)

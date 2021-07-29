@@ -1,7 +1,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.halalhacks.masjid_go">
     <!-- Flutter needs it to communicate with the running application
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <application
+        android:label="Masjid Go Profile"
+        android:icon="@mipmap/ic_launcher"
+        android:allowBackup="false"
+        tools:replace="android:label, android:allowBackup">
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="${GOOGLE_MAPS_ANDROID_DEV}"
+            tools:replace="android:value"/>
+    </application>
 </manifest>

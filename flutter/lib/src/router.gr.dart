@@ -5,14 +5,14 @@
 // **************************************************************************
 
 import 'package:auto_route/auto_route.dart' as _i1;
-import 'package:flutter/cupertino.dart' as _i7;
 import 'package:flutter/material.dart' as _i2;
+import 'package:flutter/widgets.dart' as _i7;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart' as _i8;
 
-import 'screens/home.dart' as _i3;
-import 'screens/map_routes.dart' as _i4;
-import 'screens/masjid_stops.dart' as _i6;
-import 'screens/settings.dart' as _i5;
+import 'home.dart' as _i3;
+import 'map_routes.dart' as _i4;
+import 'masjid_stops.dart' as _i6;
+import 'settings.dart' as _i5;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter([_i2.GlobalKey<_i2.NavigatorState>? navigatorKey])
@@ -32,11 +32,16 @@ class AppRouter extends _i1.RootStackRouter {
           final args = data.argsAs<MapRoutesArgs>(
               orElse: () => MapRoutesArgs(
                   origin: pathParams.optString('origin'),
-                  destination: pathParams.optString('destination')));
+                  originPlaceId: pathParams.optString('originPlaceId'),
+                  destination: pathParams.optString('destination'),
+                  destinationPlaceId:
+                      pathParams.optString('destinationPlaceId')));
           return _i4.MapRoutes(
               key: args.key,
               origin: args.origin,
-              destination: args.destination);
+              originPlaceId: args.originPlaceId,
+              destination: args.destination,
+              destinationPlaceId: args.destinationPlaceId);
         }),
     Settings.name: (routeData) => _i1.MaterialPageX<dynamic>(
         routeData: routeData,
@@ -67,23 +72,41 @@ class Home extends _i1.PageRouteInfo {
 }
 
 class MapRoutes extends _i1.PageRouteInfo<MapRoutesArgs> {
-  MapRoutes({_i7.Key? key, String? origin, String? destination})
+  MapRoutes(
+      {_i7.Key? key,
+      String? origin,
+      String? originPlaceId,
+      String? destination,
+      String? destinationPlaceId})
       : super(name,
             path: '/routes',
             args: MapRoutesArgs(
-                key: key, origin: origin, destination: destination));
+                key: key,
+                origin: origin,
+                originPlaceId: originPlaceId,
+                destination: destination,
+                destinationPlaceId: destinationPlaceId));
 
   static const String name = 'MapRoutes';
 }
 
 class MapRoutesArgs {
-  const MapRoutesArgs({this.key, this.origin, this.destination});
+  const MapRoutesArgs(
+      {this.key,
+      this.origin,
+      this.originPlaceId,
+      this.destination,
+      this.destinationPlaceId});
 
   final _i7.Key? key;
 
   final String? origin;
 
+  final String? originPlaceId;
+
   final String? destination;
+
+  final String? destinationPlaceId;
 }
 
 class Settings extends _i1.PageRouteInfo {

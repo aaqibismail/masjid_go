@@ -1,5 +1,6 @@
 import 'dart:convert' show json;
 
+import 'package:flutter/widgets.dart' show debugPrint;
 import 'package:http/http.dart' as http;
 import 'package:masjid_go/src/models/asr_jurisdiction/asr_jurisdiction.dart';
 import 'package:masjid_go/src/models/calculation_method/calculation_method.dart';
@@ -35,7 +36,7 @@ class PrayersRepository {
         }
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 

@@ -1,6 +1,7 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:convert' show json;
+
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:google_geocoding/google_geocoding.dart' hide Location;
+import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 import 'package:masjid_go/src/map_repository/map_repository.dart';
 import 'package:masjid_go/src/map_repository/map_repository_common.dart';
@@ -8,30 +9,12 @@ import 'package:masjid_go/src/models/google_place/google_place.dart';
 import 'package:masjid_go/src/models/lat_long/lat_long.dart';
 import 'package:masjid_go/src/models/masjid/masjid.dart';
 
-MapRepository getMapRepository() => MapRepositoryWeb(
-      common: MapRepositoryCommon(PolylinePoints()),
-      geocoding: GoogleGeocoding(dotenv.env["GOOGLE_MAPS_WEB"]!),
-    );
+MapRepository getMapRepository(MapRepositoryCommon common) =>
+    MapRepositoryWeb(common);
 
 class MapRepositoryWeb implements MapRepository {
   final MapRepositoryCommon common;
-  final GoogleGeocoding geocoding;
-
-  MapRepositoryWeb({
-    required this.common,
-    required this.geocoding,
-  });
-
-  @override
-  Future<String?> addressFromLoc(LatLong loc) async {
-    final results =
-        await geocoding.geocoding.getReverse(LatLon(loc.lat, loc.lng));
-    if (results?.results != null) {
-      for (final result in results!.results!) {
-        if (result.formattedAddress != null) return result.formattedAddress;
-      }
-    }
-  }
+  MapRepositoryWeb(this.common);
 
   @override
   Uri buildMapsURL(
@@ -50,11 +33,33 @@ class MapRepositoryWeb implements MapRepository {
       );
 
   @override
-  Future<PolylineResult?> findRoutes(String origin, String destination) =>
+  Future<PolylineResult?> findRoutes(
+    String destination, {
+    LatLong? origin,
+    String? originPlaceId,
+  }) =>
       common.findRoutes(
-        origin,
         destination,
+        origin: origin,
+        originPlaceId: originPlaceId,
       );
+
+  @override
+  Future<String?> getAddressFromLoc(LatLong loc) async {
+    const endpoint = "/";
+    final params = {
+      'lat': loc.lat,
+      'lng': loc.lng,
+    };
+
+    final uri = Uri.https(common.url, endpoint, params);
+
+    final response = await http.get(uri);
+    if (response.statusCode == 200) {
+      final parsedJson = json.decode(response.body);
+      return parsedJson["display_name"] as String?;
+    }
+  }
 
   @override
   Future<LatLong?> getLocation() async {
@@ -77,28 +82,17 @@ class MapRepositoryWeb implements MapRepository {
   }
 
   @override
-  Future<LatLong?> getLocFromPlaceId(String placeId) async {}
+  Future<LatLong?> getLocFromPlaceId(String placeId) =>
+      common.getLocFromPlaceId(placeId);
 
   @override
   Future<List<Masjid>> getMasjids(Route route) => common.getMasjids(route);
 
   @override
-  Future<String?> getPlaceIdFromLoc(LatLong loc) async {
-    final results =
-        await geocoding.geocoding.getReverse(LatLon(loc.lat, loc.lng));
-
-    if (results?.results != null) {
-      for (final result in results!.results!) {
-        if (result.placeId != null) return result.placeId;
-      }
-    }
-  }
-
-  @override
   Future<List<GooglePlace>> searchPlaces(
     String query, {
     LatLong? loc,
-  }) async {
-    return [];
-  }
+    int? radius,
+  }) =>
+      common.searchPlaces(query, loc: loc);
 }
