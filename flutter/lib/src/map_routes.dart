@@ -113,26 +113,32 @@ class _MapRoutesState extends ConsumerState<_MapRoutes> {
 
   @override
   Widget build(BuildContext context) {
-    final polyline = ref.watch(routesNotifierProvider.select(
-      (state) => state.maybeWhen(
-        data: (value) => value.currPolyline,
-        orElse: () => const <Polyline>{},
+    final polyline = ref.watch(
+      routesNotifierProvider.select(
+        (state) => state.maybeWhen(
+          data: (value) => value.currPolyline,
+          orElse: () => const <Polyline>{},
+        ),
       ),
-    ));
+    );
 
-    final length = ref.watch(routesNotifierProvider.select(
-      (state) => state.maybeWhen(
-        data: (value) => value.polylines.length,
-        orElse: () => 0,
+    final length = ref.watch(
+      routesNotifierProvider.select(
+        (state) => state.maybeWhen(
+          data: (value) => value.polylines.length,
+          orElse: () => 0,
+        ),
       ),
-    ));
+    );
 
-    final polylineResult = ref.watch(routesNotifierProvider.select(
-      (state) => state.maybeWhen(
-        data: (value) => value.polylineResult,
-        orElse: () => null,
+    final polylineResult = ref.watch(
+      routesNotifierProvider.select(
+        (state) => state.maybeWhen(
+          data: (value) => value.polylineResult,
+          orElse: () => null,
+        ),
       ),
-    ));
+    );
 
     ref.listen<AsyncValue<RoutesState>>(
       routesNotifierProvider,
@@ -140,10 +146,12 @@ class _MapRoutesState extends ConsumerState<_MapRoutes> {
         state.whenData((value) {
           final bounds = value.polylineResult.routes[value.page].bounds;
           if (bounds != null) {
-            mapController.animateCamera(CameraUpdate.newLatLngBounds(
-              bounds.toLatLngBounds(),
-              30,
-            ));
+            mapController.animateCamera(
+              CameraUpdate.newLatLngBounds(
+                bounds.toLatLngBounds(),
+                30,
+              ),
+            );
           }
         });
       },
@@ -218,41 +226,43 @@ class _MapRoutesState extends ConsumerState<_MapRoutes> {
                               ),
                             ),
                             Expanded(
-                                flex: 2,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Route to",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText2
-                                          ?.copyWith(
-                                            color: const Color(0xFF424F5E),
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                    ),
-                                    Text(
-                                      endAddress,
-                                      maxLines: 1,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText2
-                                          ?.copyWith(
-                                            color: const Color(0xFF424F5E),
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                    ),
-                                  ],
-                                )),
+                              flex: 2,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Route to",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText2
+                                        ?.copyWith(
+                                          color: const Color(0xFF424F5E),
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                  ),
+                                  Text(
+                                    endAddress,
+                                    maxLines: 1,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText2
+                                        ?.copyWith(
+                                          color: const Color(0xFF424F5E),
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             Expanded(
                               child: ElevatedButton(
                                 onPressed: () {},
                                 style: ElevatedButton.styleFrom(
-                                    elevation: 0,
-                                    primary: const Color(0xFFF5F5FF)),
+                                  elevation: 0,
+                                  primary: const Color(0xFFF5F5FF),
+                                ),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,

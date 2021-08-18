@@ -24,11 +24,13 @@ class HomeNotifier extends StateNotifier<AsyncValue<HomeState>> {
     final startName = await _locToString(lastLoc);
     final searches = await settingsDatabase!.getSearches();
 
-    state = AsyncData(HomeState(
-      currentLoc: lastLoc,
-      startName: startName,
-      recentSearches: searches,
-    ));
+    state = AsyncData(
+      HomeState(
+        currentLoc: lastLoc,
+        startName: startName,
+        recentSearches: searches,
+      ),
+    );
 
     return _initLocation();
   }
@@ -57,16 +59,18 @@ class HomeNotifier extends StateNotifier<AsyncValue<HomeState>> {
     if (settingsDatabase == null) return;
 
     state.whenData((value) {
-      state = AsyncData(value.copyWith(
-        currentLoc: currentLoc ?? value.currentLoc,
-        startName: startName ?? value.startName,
-        startPlaceId: startPlaceId ?? value.startPlaceId,
-        destinationName: destinationName ?? value.destinationName,
-        destinationPlaceId: destinationPlaceId ?? value.destinationPlaceId,
-        recentSearches: search != null
-            ? [...value.recentSearches, search]
-            : value.recentSearches,
-      ));
+      state = AsyncData(
+        value.copyWith(
+          currentLoc: currentLoc ?? value.currentLoc,
+          startName: startName ?? value.startName,
+          startPlaceId: startPlaceId ?? value.startPlaceId,
+          destinationName: destinationName ?? value.destinationName,
+          destinationPlaceId: destinationPlaceId ?? value.destinationPlaceId,
+          recentSearches: search != null
+              ? [...value.recentSearches, search]
+              : value.recentSearches,
+        ),
+      );
 
       if (currentLoc != null) {
         settingsDatabase!.newLocation(currentLoc);

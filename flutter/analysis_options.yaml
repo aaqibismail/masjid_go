@@ -2,11 +2,12 @@ include: package:lint/analysis_options.yaml
 
 analyzer:
   exclude:
-    - "**/*.freezed.dart"
-    - "**/*.g.dart"
-    - "**/*.gr.dart"
-    - "**/*.mocks.dart"
-    - "messages_*.dart"
+    - "lib/**.freezed.dart"
+    - "lib/**.g.dart"
+    - "lib/**.gr.dart"
+    - "lib/**.mocks.dart"
+    - "lib/messages_*.dart"
+    - "lib/generated_*.dart"
   errors:
     avoid_single_cascade_in_expression_statements: ignore
     missing_required_param: error

@@ -16,10 +16,12 @@ class RoutesNotifier extends StateNotifier<AsyncValue<RoutesState>> {
 
   void newPage(int page) {
     state.whenData((value) {
-      state = AsyncData(value.copyWith.call(
-        page: page,
-        currPolyline: {value.polylines[page]},
-      ));
+      state = AsyncData(
+        value.copyWith.call(
+          page: page,
+          currPolyline: {value.polylines[page]},
+        ),
+      );
     });
   }
 
@@ -48,19 +50,23 @@ class RoutesNotifier extends StateNotifier<AsyncValue<RoutesState>> {
       final polylines = <Polyline>[];
 
       for (var i = 0; i < converted.length; ++i) {
-        polylines.add(Polyline(
-          polylineId: PolylineId('$i'),
-          color: Colors.blue,
-          points: converted[i],
-          zIndex: 10,
-        ));
+        polylines.add(
+          Polyline(
+            polylineId: PolylineId('$i'),
+            color: Colors.blue,
+            points: converted[i],
+            zIndex: 10,
+          ),
+        );
       }
 
-      state = AsyncData(RoutesState(
-        currPolyline: {polylines[0]},
-        polylines: polylines,
-        polylineResult: polylineResult,
-      ));
+      state = AsyncData(
+        RoutesState(
+          currPolyline: {polylines[0]},
+          polylines: polylines,
+          polylineResult: polylineResult,
+        ),
+      );
     }
   }
 }

@@ -46,13 +46,14 @@ class MapRepositoryWeb implements MapRepository {
 
   @override
   Future<String?> getAddressFromLoc(LatLong loc) async {
-    const endpoint = "/";
     final params = {
       'lat': loc.lat,
       'lng': loc.lng,
     };
 
-    final uri = Uri.https(common.url, endpoint, params);
+    const endpoint = "/geocode/";
+    final uri =
+        Uri.parse('${common.url}$endpoint').replace(queryParameters: params);
 
     final response = await http.get(uri);
     if (response.statusCode == 200) {
@@ -86,7 +87,8 @@ class MapRepositoryWeb implements MapRepository {
       common.getLocFromPlaceId(placeId);
 
   @override
-  Future<List<Masjid>> getMasjids(Route route) => common.getMasjids(route);
+  Future<List<Masjid>> getMasjids(List<LatLong> points) =>
+      common.getMasjids(points);
 
   @override
   Future<List<GooglePlace>> searchPlaces(

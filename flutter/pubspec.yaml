@@ -5,23 +5,25 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.14.0-360.0.dev <3.0.0"
 
 dependencies:
+  auto_route: ^2.3.0
+  cupertino_icons: ^1.0.3
+  distance: ^1.0.0
   flutter:
     sdk: flutter
+  flutter_dotenv: ^5.0.2
+  flutter_google_places_sdk: ^0.2.2+1
+  flutter_google_places_sdk_web: ^0.1.0
   flutter_polyline_points:
     git:
       url: https://github.com/aaqibism/flutter_polyline_points.git
       ref: master
-  auto_route: ^2.2.0
-  cupertino_icons: ^1.0.3
-  distance: ^1.0.0
-  flutter_dotenv: ^5.0.0
-  flutter_google_places_sdk: ^0.2.2
   freezed_annotation: ^0.14.2
   geocoding: ^2.0.0
-  geolocator: ^7.3.1
+  geolocator: ^7.4.0
+  geolocator_web: ^2.0.6
   google_maps_flutter: ^2.0.6
   google_maps_flutter_web: ^0.3.0+3
   hive: ^2.0.4
@@ -29,22 +31,23 @@ dependencies:
   hooks_riverpod: ^1.0.0-dev.6
   http: ^0.13.3
   location: ^4.3.0
+  location_web: ^3.1.1
   quick_actions: ^0.6.0+3
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  integration_test:
-    sdk: flutter
   auto_route_generator: ^2.1.0
   build_runner: ^2.0.6
   dependency_validator: ^3.1.0
   flutter_gen_runner: ^3.1.1
   flutter_launcher_icons: ^0.9.1
+  flutter_test:
+    sdk: flutter
   freezed: ^0.14.2
   hive_generator: ^1.1.0
+  integration_test:
+    sdk: flutter
   json_serializable: ^4.1.4
-  lint: ^1.5.3
+  lint: ^1.7.2
   mocktail: ^0.1.4
 
 flutter:

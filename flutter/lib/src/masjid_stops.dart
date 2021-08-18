@@ -3,6 +3,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:masjid_go/src/background_gradient.dart';
 import 'package:masjid_go/src/masjid_stops/masjid_info_tile.dart';
+import 'package:masjid_go/src/object_extensions.dart';
 import 'package:masjid_go/src/providers.dart';
 
 class MasjidStops extends ConsumerWidget {
@@ -11,7 +12,11 @@ class MasjidStops extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final result = ref.watch(masjidsProvider(route));
+    final result = ref.watch(
+      masjidsProvider(
+        route.points.map((point) => point.toLatLong()).toList(growable: false),
+      ),
+    );
 
     return BackgroundGradient(
       child: Scaffold(
@@ -22,7 +27,9 @@ class MasjidStops extends ConsumerWidget {
           title: Text(
             'Settings',
             style: Theme.of(context).textTheme.headline4?.copyWith(
-                color: const Color(0xFFF4CCA8), fontWeight: FontWeight.normal),
+                  color: const Color(0xFFF4CCA8),
+                  fontWeight: FontWeight.normal,
+                ),
           ),
           centerTitle: true,
         ),

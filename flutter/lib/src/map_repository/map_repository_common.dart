@@ -1,4 +1,5 @@
 import 'dart:convert' show json;
+import 'dart:math';
 
 import 'package:flutter/widgets.dart' show debugPrint;
 import 'package:flutter_google_places_sdk/flutter_google_places_sdk.dart';
@@ -41,7 +42,7 @@ class MapRepositoryCommon {
       final ids = StringBuffer();
       for (var i = 0; i < waypoints.length; ++i) {
         points.write(Uri.encodeFull(waypoints[i].toString()));
-        ids.write(Uri.encodeFull(waypoint_place_ids[i].toString()));
+        ids.write(Uri.encodeFull(waypoint_place_ids[i]));
         if (i != waypoints.length - 1) {
           points.write(Uri.encodeFull('|'));
           ids.write(Uri.encodeFull('|'));
@@ -70,7 +71,8 @@ class MapRepositoryCommon {
         'destination': 'place_id:$destination',
       };
 
-      final uri = Uri.parse(url).replace(queryParameters: params);
+      const endpoint = '/directions/';
+      final uri = Uri.parse('$url$endpoint').replace(queryParameters: params);
 
       final response = await http.get(uri);
       if (response.statusCode == 200) {
@@ -90,14 +92,88 @@ class MapRepositoryCommon {
     return place.place?.latLng?.toLatLong();
   }
 
-  Future<List<Masjid>> getMasjids(Route route) async {
-    final uri = Uri.parse(url);
-    final locs = route.points.map((e) => e.toLatLngString()).toList();
-    final response = await http.post(uri, body: {"locs": locs});
+  Future<List<Masjid>> getMasjids(List<LatLong> points) async {
+    final searchIndices = <int>[];
+    searchIndices.add(0);
+
+    int? index;
+    do {
+      index = _pointInRange(points, index ?? 0, 80, 160);
+      if (index != null) searchIndices.add(index);
+      // Only search maximum 20 times or around 1000 - 2000 miles
+      if (searchIndices.length == 19) {
+        searchIndices.add(points.length - 1);
+        break;
+      }
+    } while (index != null);
+
+    final futures = searchIndices.map(
+      (index) => places.findAutocompletePredictions(
+        'mosques',
+        origin: LatLng(lat: points[index].lat, lng: points[index].lng),
+      ),
+    );
+    final predictions = await Future.wait(futures);
+    final placeIds = <String>{};
+
+    for (final result in predictions) {
+      for (final prediction in result.predictions) {
+        placeIds.add('place_id:${prediction.placeId}');
+      }
+    }
+
+    final body = {
+      "origin": points.first.toString(),
+      "masjids": placeIds.toList(growable: false),
+    };
+
+    const endpoint = '/masjids/';
+    final uri = Uri.parse('$url$endpoint');
+    final response = await http.post(uri, body: body);
     if (response.statusCode == 200) {
       final parsedJson = json.decode(response.body);
     }
     return const [];
+  }
+
+  // Returns index of element in range of min and max km
+  int? _pointInRange(List<LatLong> points, int startIndex, int min, int max) {
+    // Doing binary search
+    int low = startIndex;
+    int high = points.length - 1;
+
+    while (low < high) {
+      final mid = low + (high - low) ~/ 2;
+
+      final distance =
+          _getDistanceFromLatLonInKm(points[startIndex], points[mid]);
+
+      if (distance < min) {
+        low = mid + 1;
+      } else if (distance > max) {
+        high = mid - 1;
+      } else {
+        return mid;
+      }
+    }
+  }
+
+  double _getDistanceFromLatLonInKm(LatLong loc1, LatLong loc2) {
+    const R = 6371; // Radius of the earth in km
+    final dLat = _deg2rad(loc2.lat - loc1.lat); // _deg2rad below
+    final dLon = _deg2rad(loc2.lng - loc1.lng);
+    final a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(_deg2rad(loc1.lat)) *
+            cos(_deg2rad(loc2.lat)) *
+            sin(dLon / 2) *
+            sin(dLon / 2);
+    final c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    final d = R * c; // Distance in km
+    return d;
+  }
+
+  double _deg2rad(double deg) {
+    return deg * (pi / 180);
   }
 
   Future<List<GooglePlace>> searchPlaces(String query, {LatLong? loc}) async {

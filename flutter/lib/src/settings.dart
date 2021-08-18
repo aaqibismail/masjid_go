@@ -28,26 +28,32 @@ class Settings extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final useRecentLocations = ref.watch(settingsNotifierProvider.select(
-      (value) => value.maybeWhen(
-        data: (value) => value.storeLastLocation,
-        orElse: () => true,
+    final useRecentLocations = ref.watch(
+      settingsNotifierProvider.select(
+        (value) => value.maybeWhen(
+          data: (value) => value.storeLastLocation,
+          orElse: () => true,
+        ),
       ),
-    ));
+    );
 
-    final asrPreference = ref.watch(settingsNotifierProvider.select(
-      (value) => value.maybeWhen(
-        data: (value) => value.asr,
-        orElse: () => AsrJurisdiction.standard,
+    final asrPreference = ref.watch(
+      settingsNotifierProvider.select(
+        (value) => value.maybeWhen(
+          data: (value) => value.asr,
+          orElse: () => AsrJurisdiction.standard,
+        ),
       ),
-    ));
+    );
 
-    final calcMethod = ref.watch(settingsNotifierProvider.select(
-      (value) => value.maybeWhen(
-        data: (value) => value.calcMethod,
-        orElse: () => CalculationMethod.isna,
+    final calcMethod = ref.watch(
+      settingsNotifierProvider.select(
+        (value) => value.maybeWhen(
+          data: (value) => value.calcMethod,
+          orElse: () => CalculationMethod.isna,
+        ),
       ),
-    ));
+    );
 
     return BackgroundGradient(
       child: Scaffold(
@@ -62,7 +68,9 @@ class Settings extends HookConsumerWidget {
           title: Text(
             'Settings',
             style: Theme.of(context).textTheme.headline4?.copyWith(
-                color: const Color(0xFFF4CCA8), fontWeight: FontWeight.normal),
+                  color: const Color(0xFFF4CCA8),
+                  fontWeight: FontWeight.normal,
+                ),
           ),
           centerTitle: true,
         ),

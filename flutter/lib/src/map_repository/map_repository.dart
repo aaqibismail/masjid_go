@@ -34,7 +34,8 @@ abstract class MapRepository {
   Future<LatLong?> getLocFromPlaceId(String placeId) =>
       throw UnimplementedError();
 
-  Future<List<Masjid>> getMasjids(Route route) => throw UnimplementedError();
+  Future<List<Masjid>> getMasjids(List<LatLong> points) =>
+      throw UnimplementedError();
 
   Future<List<GooglePlace>> searchPlaces(String query, {LatLong? loc}) =>
       throw UnimplementedError();

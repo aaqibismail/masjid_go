@@ -73,7 +73,8 @@ class MapRepositoryMobile implements MapRepository {
       common.getLocFromPlaceId(placeId);
 
   @override
-  Future<List<Masjid>> getMasjids(Route route) => common.getMasjids(route);
+  Future<List<Masjid>> getMasjids(List<LatLong> points) =>
+      common.getMasjids(points);
 
   @override
   Future<List<GooglePlace>> searchPlaces(String query, {LatLong? loc}) =>

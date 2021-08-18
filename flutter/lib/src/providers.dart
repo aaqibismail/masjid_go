@@ -68,9 +68,9 @@ final routesNotifierProvider =
   return RoutesNotifier(mapRepository: ref.read(mapRepoProvider));
 });
 
-final masjidsProvider =
-    FutureProvider.autoDispose.family<List<Masjid>, Route>((ref, route) {
-  return ref.read(mapRepoProvider).getMasjids(route);
+final masjidsProvider = FutureProvider.autoDispose
+    .family<List<Masjid>, List<LatLong>>((ref, points) {
+  return ref.read(mapRepoProvider).getMasjids(points);
 });
 
 final homeSubmitProvider = FutureProvider.autoDispose

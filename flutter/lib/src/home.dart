@@ -155,12 +155,15 @@ class _HomeState extends ConsumerState<Home> {
 
       final destination = result.data!.value["destination"]!;
 
-      AutoRouter.of(context).push(MapRoutes(
-        origin: origin.toString(),
-        originPlaceId: state.startPlaceId,
-        destination: destination.toString(),
-        destinationPlaceId: state.destinationPlaceId,
-      ));
+      if (!mounted) return;
+      AutoRouter.of(context).push(
+        MapRoutes(
+          origin: origin.toString(),
+          originPlaceId: state.startPlaceId,
+          destination: destination.toString(),
+          destinationPlaceId: state.destinationPlaceId,
+        ),
+      );
     }
   }
 }
@@ -190,14 +193,16 @@ class _LocationField extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final initial = ref.watch(homeNotifierProvider.select((state) {
-      return state.maybeWhen(
-        data: (value) => searchType == SearchType.start
-            ? value.startName
-            : value.destinationName,
-        orElse: () => null,
-      );
-    }));
+    final initial = ref.watch(
+      homeNotifierProvider.select((state) {
+        return state.maybeWhen(
+          data: (value) => searchType == SearchType.start
+              ? value.startName
+              : value.destinationName,
+          orElse: () => null,
+        );
+      }),
+    );
 
     return GestureDetector(
       onTap: () => onTap(context, ref, searchType),
